@@ -1,5 +1,6 @@
 import path from 'path';
 
+import { errors } from 'celebrate';
 import cors from 'cors';
 import express from 'express';
 import mongoose from 'mongoose';
@@ -19,6 +20,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/product', productRouter);
 app.use('/order', orderRouter);
 app.use(notFound);
+app.use(errors());
 app.use(errorHandler);
 
 const connect = async () => {
