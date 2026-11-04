@@ -5,6 +5,8 @@ import express from 'express';
 import mongoose from 'mongoose';
 
 import { DB_ADDRESS, PORT } from './config';
+import errorHandler from './middlewares/error-handler';
+import notFound from './middlewares/not-found';
 import orderRouter from './routes/order';
 import productRouter from './routes/product';
 
@@ -16,6 +18,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/product', productRouter);
 app.use('/order', orderRouter);
+app.use(notFound);
+app.use(errorHandler);
 
 const connect = async () => {
   await mongoose.connect(DB_ADDRESS);

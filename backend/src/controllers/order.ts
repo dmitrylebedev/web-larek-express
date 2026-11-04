@@ -1,8 +1,9 @@
 import { faker } from '@faker-js/faker';
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import validator from 'validator';
 
+import BadRequestError from '../errors/bad-request-error';
 import Product from '../models/product';
 
 const VALIDATION_MESSAGE = 'Ошибка валидации данных при создании заказа';
@@ -13,7 +14,7 @@ const isNonEmptyString = (value: unknown): value is string => (
 
 const isObjectId = (value: string) => /^[a-f\d]{24}$/i.test(value);
 
-const createOrder = async (req: Request, res: Response) => {
+const createOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {
       payment,
@@ -39,14 +40,14 @@ const createOrder = async (req: Request, res: Response) => {
       && hasValidItems;
 
     if (!isValidRequest) {
-      return res.status(400).json({ message: VALIDATION_MESSAGE });
+      return next(new BadRequestError(VALIDATION_MESSAGE));
     }
 
     const productIds = items as string[];
     const unknownId = productIds.find((id) => !isObjectId(id));
 
     if (unknownId) {
-      return res.status(400).json({ message: `Товар с id ${unknownId} не найден` });
+      return next(new BadRequestError(`Товар с id ${unknownId} не найден`));
     }
 
     const products = await Product.find({
@@ -63,18 +64,18 @@ const createOrder = async (req: Request, res: Response) => {
       const product = productsById.get(id);
 
       if (!product) {
-        return res.status(400).json({ message: `Товар с id ${id} не найден` });
+        return next(new BadRequestError(`Товар с id ${id} не найден`));
       }
 
       if (product.price === null) {
-        return res.status(400).json({ message: `Товар с id ${id} не продается` });
+        return next(new BadRequestError(`Товар с id ${id} не продается`));
       }
 
       sum += product.price;
     }
 
     if (sum !== total) {
-      return res.status(400).json({ message: 'Неверная сумма заказа' });
+      return next(new BadRequestError('Неверная сумма заказа'));
     }
 
     return res.json({
@@ -82,7 +83,7 @@ const createOrder = async (req: Request, res: Response) => {
       total,
     });
   } catch (error) {
-    return res.status(500).json({ message: 'На сервере произошла ошибка' });
+    return next(error);
   }
 };
 
