@@ -18,7 +18,7 @@ export const getProducts = async (
   next: NextFunction,
 ) => {
   try {
-    const products = await Product.find({});
+    const products = await Product.find();
     return res.json({
       items: products,
       total: products.length,
