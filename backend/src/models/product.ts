@@ -1,5 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
 
+import { removeImage } from '../utils/file';
+
 interface IProductImage {
   fileName: string;
   originalName: string;
@@ -48,5 +50,11 @@ const productSchema = new Schema<IProduct>({
     default: null,
   },
 }, { versionKey: false });
+
+productSchema.post('findOneAndDelete', async (doc) => {
+  if (doc) {
+    await removeImage(doc.image.fileName);
+  }
+});
 
 export default mongoose.model<IProduct>('product', productSchema);

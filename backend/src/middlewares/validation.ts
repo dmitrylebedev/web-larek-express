@@ -20,8 +20,32 @@ const orderSchema = Joi.object().keys({
   items: Joi.array().items(Joi.string().hex().length(24)).min(1).required(),
 });
 
+const productUpdateSchema = Joi.object().keys({
+  title: Joi.string().min(2).max(30),
+  image: Joi.object().keys({
+    fileName: Joi.string().required(),
+    originalName: Joi.string().required(),
+  }),
+  category: Joi.string(),
+  description: Joi.string(),
+  price: Joi.number().allow(null),
+});
+
+const productIdSchema = Joi.object().keys({
+  productId: Joi.string().hex().length(24).required(),
+});
+
 export const validateProduct = celebrate({
   [Segments.BODY]: productSchema,
+});
+
+export const validateProductUpdate = celebrate({
+  [Segments.PARAMS]: productIdSchema,
+  [Segments.BODY]: productUpdateSchema,
+});
+
+export const validateProductId = celebrate({
+  [Segments.PARAMS]: productIdSchema,
 });
 
 export const validateOrder = celebrate({

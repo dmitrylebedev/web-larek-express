@@ -11,6 +11,8 @@ const {
   AUTH_ACCESS_TOKEN_EXPIRY = '10m',
   AUTH_REFRESH_TOKEN_EXPIRY = '7d',
   JWT_SECRET = 'weblarek-dev-secret',
+  UPLOAD_PATH = 'images',
+  UPLOAD_PATH_TEMP = 'temp',
 } = process.env;
 
 export {
@@ -20,4 +22,6 @@ export {
   AUTH_ACCESS_TOKEN_EXPIRY,
   AUTH_REFRESH_TOKEN_EXPIRY,
   JWT_SECRET,
+  UPLOAD_PATH,
+  UPLOAD_PATH_TEMP,
 };

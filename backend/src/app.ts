@@ -13,6 +13,8 @@ import notFound from './middlewares/not-found';
 import authRouter from './routes/auth';
 import orderRouter from './routes/order';
 import productRouter from './routes/product';
+import uploadRouter from './routes/upload';
+import { ensureUploadDirs, startTempCleanup } from './utils/file';
 
 const app = express();
 
@@ -28,6 +30,7 @@ app.use(requestLogger);
 app.use('/product', productRouter);
 app.use('/order', orderRouter);
 app.use('/auth', authRouter);
+app.use('/upload', uploadRouter);
 app.use(notFound);
 app.use(errorLogger);
 app.use(errors());
@@ -35,6 +38,8 @@ app.use(errorHandler);
 
 const connect = async () => {
   await mongoose.connect(DB_ADDRESS);
+  await ensureUploadDirs();
+  startTempCleanup();
   app.listen(PORT, () => {
     // eslint-disable-next-line no-console
     console.log(`App listening on port ${PORT}`);
