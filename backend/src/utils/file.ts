@@ -47,12 +47,7 @@ export const publishImage = async (fileName: string) => {
   try {
     await fs.access(source);
   } catch (_error) {
-    try {
-      await fs.access(destination);
-      return;
-    } catch (_destinationError) {
-      throw new BadRequestError('Файл изображения не найден');
-    }
+    return;
   }
 
   await fs.rename(source, destination);

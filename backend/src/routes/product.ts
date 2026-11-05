@@ -16,7 +16,7 @@ import {
 const router = Router();
 
 router.get('/', getProducts);
-router.post('/', auth, validateProduct, createProduct);
+router.post('/', validateProduct, createProduct);
 router.patch('/:productId', auth, validateProductUpdate, updateProduct);
 router.delete('/:productId', auth, validateProductId, deleteProduct);
 

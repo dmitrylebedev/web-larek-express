@@ -64,7 +64,7 @@ export const createProduct = async (
   try {
     await publishImage(req.body.image.fileName);
     const product = await Product.create(req.body);
-    return res.json(product);
+    return res.status(201).json(product);
   } catch (error) {
     return handleWriteError(error, next, VALIDATION_MESSAGE);
   }
