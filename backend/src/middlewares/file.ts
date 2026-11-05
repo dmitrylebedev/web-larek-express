@@ -8,9 +8,9 @@ import { createStoredFileName, tempDir } from '../utils/file';
 
 const allowedMimeTypes = [
   'image/png',
+  'image/jpg',
   'image/jpeg',
   'image/gif',
-  'image/webp',
   'image/svg+xml',
 ];
 

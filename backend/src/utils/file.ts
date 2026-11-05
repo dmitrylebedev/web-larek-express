@@ -13,7 +13,7 @@ const sourceRoot = path.resolve(__dirname, '..');
 export const tempDir = path.resolve(sourceRoot, '..', UPLOAD_PATH_TEMP);
 export const imagesDir = path.resolve(sourceRoot, 'public', UPLOAD_PATH);
 
-const allowedExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg'];
+const allowedExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.svg'];
 
 export const createStoredFileName = (originalName: string) => {
   const extension = path.extname(originalName).toLowerCase();
