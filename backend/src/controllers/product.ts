@@ -35,7 +35,7 @@ export const createProduct = async (
 ) => {
   try {
     const product = await Product.create(req.body);
-    return res.json(product);
+    return res.status(201).json(product);
   } catch (error) {
     if (
       error instanceof MongooseError.ValidationError
