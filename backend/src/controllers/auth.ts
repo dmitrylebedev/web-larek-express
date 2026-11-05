@@ -18,7 +18,6 @@ import {
 const INVALID_CREDENTIALS = 'Неправильные почта или пароль';
 const INVALID_TOKEN = 'Не валидный токен';
 const AUTH_REQUIRED = 'Необходима авторизация';
-const TOKEN_EXPIRED = 'Истек срок действия токена';
 const USER_NOT_FOUND = 'Пользователь не найден';
 const INVALID_USER_ID = 'Передан невалидный id пользователя';
 const DUPLICATE_EMAIL = 'Пользователь с таким email уже существует';
@@ -208,29 +207,13 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
 
 export const getCurrentUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { authorization } = req.headers;
+    const userId = req.user?._id;
 
-    if (!authorization || !authorization.startsWith('Bearer ')) {
+    if (!userId) {
       return next(new UnauthorizedError(AUTH_REQUIRED));
     }
 
-    let payload;
-
-    try {
-      payload = verifyToken(authorization.replace('Bearer ', ''));
-    } catch (error) {
-      if (error instanceof Error && error.name === 'TokenExpiredError') {
-        return next(new UnauthorizedError(TOKEN_EXPIRED));
-      }
-
-      return next(new UnauthorizedError(AUTH_REQUIRED));
-    }
-
-    if (!isObjectId(payload._id)) {
-      return next(new UnauthorizedError(AUTH_REQUIRED));
-    }
-
-    const user = await User.findById(payload._id);
+    const user = await User.findById(userId);
 
     if (!user) {
       return next(new NotFoundError(USER_NOT_FOUND));

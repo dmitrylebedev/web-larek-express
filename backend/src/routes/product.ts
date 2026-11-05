@@ -6,6 +6,7 @@ import {
   getProducts,
   updateProduct,
 } from '../controllers/product';
+import auth from '../middlewares/auth';
 import {
   validateProduct,
   validateProductId,
@@ -15,8 +16,8 @@ import {
 const router = Router();
 
 router.get('/', getProducts);
-router.post('/', validateProduct, createProduct);
-router.patch('/:productId', validateProductUpdate, updateProduct);
-router.delete('/:productId', validateProductId, deleteProduct);
+router.post('/', auth, validateProduct, createProduct);
+router.patch('/:productId', auth, validateProductUpdate, updateProduct);
+router.delete('/:productId', auth, validateProductId, deleteProduct);
 
 export default router;
